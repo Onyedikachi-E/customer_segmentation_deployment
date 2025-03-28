@@ -159,6 +159,29 @@
       }
 
       async function submitForm() {
+
+        const customerName = document.getElementById("customer_name").value.trim();
+        const productCategory = document.getElementById("products_category").value.trim();
+        const productName = document.getElementById("product_name").value.trim();
+        const subscriptionType = document.getElementById("subscription_type").value.trim();
+        const usageFrequency = document.getElementById("usage_frequency").value.trim();
+        const paymentPlan = document.getElementById("payment_plan").value.trim();
+        const marketingChannel = document.getElementById("marketing_channel").value.trim();
+
+        if (!customerName || !productCategory || !productName || !subscriptionType || !usageFrequency || !paymentPlan || !marketingChannel) {
+          alert("Please fill in all required fields before submitting.");
+          return;
+        }
+
+        const data = {
+          Product_Name: productName,
+          Products_Category: productCategory,
+          Subscription_Type: subscriptionType,
+          Usage_Frequency: usageFrequency,
+          Payment_Plan: paymentPlan,
+          Marketing_Channel: marketingChannel,
+        };
+
         document.getElementById("predictionResult").innerHTML = `
           <div class="loading-container">
             <div class="spinner-border text-primary" role="status"></div>
@@ -167,18 +190,16 @@
         `;
 
         try {
-          const response = await fetch("https://prediction-model-rpg1.onrender.com/api/predict", {
+          const response = await fetch("https://prediction-model-rpg1.onrender.com//api/predict", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
           });
 
-          if (!response.ok) throw new Error(`Server error: ${response.status}`);
-
-          const prediction = await response.json();
-          document.getElementById("predictionResult").innerHTML = `
-            ${customerName} belongs to <strong>${prediction.Interpretation}</strong> segment.
-          `;
+          if (response.ok) {
+            const prediction = await response.json();
+            document.getElementById("predictionResult").innerHTML = `${customerName} belongs to ${prediction.Interpretation} segment`;
+          }
         } catch (error) {
           document.getElementById("predictionResult").innerHTML = `<p class="text-danger">Error: ${error.message}</p>`;
         }
