@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Customer Prediction Model</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.css" />
+    <link rel="stylesheet" href="../static/css/upload_form.css" />
+  </head>
+  <body>
+    <section class="m-5 centered-container w-100">
+      <div class="d-flex justify-content-center">
+        <h1 class="custom-heading">Flask Application for Cognitive Software Solution</h1>
+      </div>
+      <br />
+
+      <div class="d-flex p-2 justify-content-center bg-secondary rounded">
+        <div class="container border --bs-border-color-#1885f3 p-2 mx-2 rounded" style="--bs-border-width:2px;">
+          <h2 class="text-center text-dark text-decoration-underline mb-3">
+            Customer Segmentation Model
+          </h2>
+          <br />
+
+          <form id="predictForm" class="form" enctype="multipart/form-data">
+            <div class="col-sm-8">
+              <input class="form-control" type="text" name="customer_name" id="customer_name" placeholder="Enter Customer Name Here"/>
+            </div>
+            <br/>
+
+            <div class="form-group row">
+              <div class="col-sm-6">
+                <label for="products_category" class="form-label">Product Category</label>
+                <select class="form-control" name="products_category" id="products_category">
+                  <option value="">Select Products Category</option>
+                  <option value="SaaS">SaaS</option>
+                  <option value="Security">Security</option>
+                  <option value="Cloud Services">Cloud Services</option>
+                  <option value="Artificial Intelligence">Artificial Intelligence</option>
+                  <option value="Development Tools">Development Tools</option>
+                </select>
+              </div>
+
+              <div class="col-sm-6">
+                <label for="product_name" class="form-label">Product Name</label>
+                <select class="form-control" name="product_name" id="product_name">
+                  <option value="">Select Product Name</option>
+                </select>
+              </div>
+            </div>
+            <br/>
+
+            <div class="form-group row">
+              <div class="col-sm-6">
+                <label for="subscription_type" class="form-label">Subscription Type</label>
+                <select class="form-control" name="subscription_type" id="subscription_type">
+                  <option value="">Select Subscription Type</option>
+                  <option value="Free">Free</option>
+                  <option value="Basic">Basic</option>
+                  <option value="Pro">Pro</option>
+                  <option value="Enterprise">Enterprise</option>
+                </select>
+              </div>
+
+              <div class="col-sm-6">
+                <label for="usage_frequency" class="form-label">Usage Frequency</label>
+                <select class="form-control" name="usage_frequency" id="usage_frequency">
+                  <option value="">Select Usage Frequency</option>
+                  <option value="Daily">Daily</option>
+                  <option value="Weekly">Weekly</option>
+                  <option value="Monthly">Monthly</option>
+                </select>
+              </div>
+            </div>
+            <br/>
+
+            <div class="form-group row">
+              <div class="col-sm-6">
+                <label for="payment_plan" class="form-label">Payment Plan</label>
+                <select class="form-control" name="payment_plan" id="payment_plan">
+                  <option value="">Select Payment Plan</option>
+                  <option value="Monthly">Monthly</option>
+                  <option value="Annual">Annual</option>
+                  <option value="Lifetime">Lifetime</option>
+                </select>
+              </div>
+
+              <div class="col-sm-6">
+                <label for="marketing_channel" class="form-label">Marketing Channel</label>
+                <select class="form-control" name="marketing_channel" id="marketing_channel">
+                  <option value="">Select Marketing Channel</option>
+                  <option value="Adverts">Adverts</option>
+                  <option value="Social Media">Social Media</option>
+                  <option value="Referral">Referral</option>
+                  <option value="Direct">Direct</option>
+                  <option value="Email">Email</option>
+                </select>
+              </div>
+            </div>
+            <br/>
+
+            <div class="d-flex justify-content-center mt-3">
+              <div id="predictionResult" class="border rounded p-3 text-center" 
+                   style="width: 50%; height: 150px; font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center; border: 4px solid red; background-color: #fff3cd;">
+                Prediction result will appear here...
+              </div>
+            </div> 
+            <br/>
+
+            <div class="d-flex justify-content-center">
+              <button type="button" class="btn btn-lg btn-success" onclick="submitForm()" title="Make Model Prediction">
+                Predict
+              </button>
+              <input class="btn btn-lg btn-danger" title="clear entire form inputs" type="reset" value="Clear" onclick="resetPredictionResult()"/>
+            </div> 
+            <br/>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      const productData = {
+        "SaaS": ["SyncVault", "PulseDesk", "CognitiveFlow", "TaskGenius"],
+        "Security": ["SecureAuth", "FortiGateX", "SentinelShield", "DataGuardian"],
+        "Cloud Services": ["CloudHorizon", "SkyCompute", "ServerNexus", "EdgeSync"],
+        "Artificial Intelligence": ["NeuroVision", "LinguoSense", "DeepMindX", "PredictEdge"],
+        "Development Tools": ["ScriptEase", "CodeFusion", "APIConnect", "DevSync"],
+      };
+
+      function updateProductNames() {
+        const categorySelect = document.getElementById("products_category");
+        const productSelect = document.getElementById("product_name");
+        const selectedCategory = categorySelect.value;
+
+        productSelect.innerHTML = '<option value="">Select Product Name</option>';
+        if (selectedCategory in productData) {
+          productData[selectedCategory].forEach((product) => {
+            const option = document.createElement("option");
+            option.textContent = product;
+            productSelect.appendChild(option);
+          });
+        }
+      }
+      document.getElementById("products_category").addEventListener("change", updateProductNames);
+
+      function resetPredictionResult() {
+        document.getElementById("predictionResult").innerHTML = "Prediction result will appear here...";
+      }
+
+      async function submitForm() {
+        const customerName = document.getElementById("customer_name").value.trim();
+        const productCategory = document.getElementById("products_category").value.trim();
+        const productName = document.getElementById("product_name").value.trim();
+        const subscriptionType = document.getElementById("subscription_type").value.trim();
+        const usageFrequency = document.getElementById("usage_frequency").value.trim();
+        const paymentPlan = document.getElementById("payment_plan").value.trim();
+        const marketingChannel = document.getElementById("marketing_channel").value.trim();
+
+        if (!customerName || !productCategory || !productName || !subscriptionType || !usageFrequency || !paymentPlan || !marketingChannel) {
+          alert("Please fill in all required fields before submitting.");
+          return;
+        }
+
+        const data = {
+          Product_Name: productName,
+          Products_Category: productCategory,
+          Subscription_Type: subscriptionType,
+          Usage_Frequency: usageFrequency,
+          Payment_Plan: paymentPlan,
+          Marketing_Channel: marketingChannel,
+        };
+
+        try {
+          const response = await fetch("http://127.0.0.1:8001/api/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+
+          if (response.ok) {
+            const prediction = await response.json();
+            document.getElementById("predictionResult").innerHTML = `${customerName} belongs to ${prediction.Interpretation} segment`;
+          }
+        } catch (error) {
+          alert("Network error: " + error.message);
+        }
+      }
+    </script>
+  </body>
+</html>

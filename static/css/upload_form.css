@@ -1,0 +1,36 @@
+body {
+    display:grid ;
+    align-items:center;
+    justify-content:center;
+    height: 100vh;
+    margin: 0;
+    background-color: aquamarine;
+}
+
+
+.centered-container {
+    width: 100%; /* Expands width to 90% of the viewport */
+    max-width: 1200px; /* Sets a maximum width */
+    margin: auto; /* Centers the section */
+  }
+
+.container {
+    width: 100%;
+    max-width: 1000px;
+}
+
+.myDiv {
+    width: 1830px;
+    height: 50px;
+    /* background-color: #00FFFF; */
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+  
+.custom-heading {
+    font-family: 'Arial', sans-serif; /* Change to any font you prefer */
+    font-weight: bold; /* Makes the text bold */
+    color: #333; /* Optional: Change text color */
+}
+  
