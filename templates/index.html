@@ -28,7 +28,7 @@
       <br />
 
       <div class="d-flex p-2 justify-content-center bg-secondary rounded">
-        <div class="container border border-primary p-2 mx-2 rounded" style="border-width: 2px;">
+        <div class="container border --bs-border-color-#1885f3 p-2 mx-2 rounded" style="--bs-border-width:2px;">
           <h2 class="text-center text-dark text-decoration-underline mb-3">
             Customer Segmentation Model
           </h2>
@@ -181,15 +181,27 @@
           </div>
         `;
 
+        const data = {
+          Product_Name: productName,
+          Products_Category: productCategory,
+          Subscription_Type: subscriptionType,
+          Usage_Frequency: usageFrequency,
+          Payment_Plan: paymentPlan,
+          Marketing_Channel: marketingChannel,
+        };
+
         try {
           const response = await fetch("https://prediction-model-rpg1.onrender.com/api/predict", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ Product_Name: productName, Products_Category: productCategory }),
+            body: JSON.stringify(data),
           });
 
-          const prediction = await response.json();
-          document.getElementById("predictionResult").innerHTML = `${customerName} belongs to ${prediction.Interpretation} segment`;
+          if (response.ok) {
+            const prediction = await response.json();
+            document.getElementById("predictionResult").innerHTML = `${customerName} belongs to ${prediction.Interpretation} segment`;
+          }
+
         } catch (error) {
           document.getElementById("predictionResult").innerHTML = `<p class="text-danger">Error: ${error.message}</p>`;
         }
