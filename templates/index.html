@@ -150,10 +150,12 @@
           productData[selectedCategory].forEach((product) => {
             const option = document.createElement("option");
             option.textContent = product;
+            option.value = product;  // Fixed missing value assignment
             productSelect.appendChild(option);
           });
         }
       }
+
       document.getElementById("products_category").addEventListener("change", updateProductNames);
 
       function resetPredictionResult() {
@@ -197,13 +199,19 @@
             body: JSON.stringify(data),
           });
 
-          if (response.ok) {
-            const prediction = await response.json();
-            document.getElementById("predictionResult").innerHTML = `${customerName} belongs to ${prediction.Interpretation} segment`;
+          if (!response.ok) {
+            throw new Error("Failed to fetch prediction. Please try again.");
           }
 
+          const prediction = await response.json();
+          document.getElementById("predictionResult").innerHTML = `
+            <div class="text-success">${customerName} belongs to ${prediction.Interpretation} segment</div>
+          `;
+
         } catch (error) {
-          document.getElementById("predictionResult").innerHTML = `<p class="text-danger">Error: ${error.message}</p>`;
+          document.getElementById("predictionResult").innerHTML = `
+            <div class="text-danger">Error: ${error.message}</div>
+          `;
         }
       }
     </script>
